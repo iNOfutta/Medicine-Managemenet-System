@@ -72,7 +72,7 @@ export default function Navbar() {
             </Link>
           </li>
           <li page="pharmacists">
-            <Link href="/user/items" className="nav-link">
+            <Link href="#" className="nav-link">
               <FaShapes
                 style={{
                   color: "#d1d1d1",

@@ -127,7 +127,7 @@ const Items = () => {
           ) : (
             <div style={{ textAlign: "center", color: "#888" }}>
               <h2 style={{ opacity: 0.6 }}>
-                Você ainda não removou nenhum medicamento.
+                Você ainda não removeu nenhum medicamento.
               </h2>
               <p style={{ opacity: 0.6, fontWeight: 500 }}>
                 Clique aqui para remover medicamentos -{" "}

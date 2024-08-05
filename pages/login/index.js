@@ -54,10 +54,10 @@ export default function Login() {
       .catch((err) => {
         switch (err.code) {
           case "auth/wrong-password":
-            setError("Wrong Password. Please try again.");
+            setError("Senha incorreta. Por favor, tente novamente.");
             break;
           default:
-            setError("Something went wrong. Please try again.");
+            setError("Algo deu errado. Por favor, tente novamente.");
             break;
         }
         setLoading(false);
