@@ -1,80 +1,95 @@
 /**
- * 
- * @param {import('next').NextApiRequest} req 
- * @param {import('next').NextApiResponse} res 
+ *
+ * @param {import('next').NextApiRequest} req
+ * @param {import('next').NextApiResponse} res
  */
 
-// import Medicine from '../../../Models/medicine';
-import User from '../../../Models/user';
-import connectMongo from '../../../utils/connectMongo';
+import User from "../../../Models/user";
+import connectMongo from "../../../utils/connectMongo";
 
 export default async function add(req, res) {
+  try {
+    // Tentar conectar ao banco de dados
+    await connectMongo();
 
-    try {
-        // try to connect database
-        await connectMongo();
+    // Obter dados do corpo da requisição
+    const {
+      uid,
+      _id,
+      quantity,
+      remove_quantity,
+      name,
+      type,
+      uploadOn,
+      date,
+      price,
+    } = req.body;
 
-        // fetch data
-        const { uid, _id, quantity, remove_quantity, name, type, uploadOn, date, price } = req.body;
-        // console.log(req.body);
+    console.log("Body: ", req.body);
 
-        // find appropiate user for the addition
-        const salesAmount = price * remove_quantity;
+    // Encontrar o usuário apropriado para a adição
+    const salesAmount = price * remove_quantity;
 
-        User.findById(uid, (err, user) => {
-            if (err) {
-                console.error(err);
-            } else {
-                const currentQuantity = user.totalSale;
-                user.stock.find(s => s._id.toString() === _id).quantity = quantity - remove_quantity;
+    // Buscar usuário pelo ID
+    const user = await User.findById(uid);
 
-                // console.log("in");
-                user.save((err, updatedUser) => {
-                    if (err) {
-                        console.error(err);
-                    } else {
-                        User.findOneAndUpdate(
-                            { uid },
-                            {
-                                $push: {
-                                    history: {
-                                        $each: [{
-                                            name,
-                                            quantity: remove_quantity,
-                                            total_quantity: (quantity - remove_quantity),
-                                            updateon: uploadOn,
-                                            type
-                                        }], $position: 0
-                                    },
-                                    sales: {
-                                        $each: [{
-                                            name,
-                                            quantity,
-                                            remaining_quantity: (quantity - remove_quantity),
-                                            sales_ammount: (quantity * price),
-                                            date
-                                        }], $position: 0
-                                    }
-                                },
-                                $set: {
-                                    totalSale: currentQuantity + salesAmount
-                                }
-                            },
-                            { new: true },
-                            function removeConnectionsCB(err, obj) {
-                                if (err) {
-                                    console.error(err);
-                                } else {
-                                    res.send({ msg: 'Medicie Successfully Sell...' })
-                                }
-                            }
-                        );
-                    }
-                });
-            }
-        });
-    } catch (error) {
-        console.log(error);
-        res.send({ msg: error });
+    if (!user) {
+      return res.status(404).json({ msg: "Usuário não encontrado" });
     }
+
+    // Atualizar quantidade de estoque
+    const stockItem = user.stock.find((s) => s._id.toString() === _id);
+
+    if (!stockItem) {
+      return res.status(404).json({ msg: "Item de estoque não encontrado" });
+    }
+
+    stockItem.quantity = quantity - remove_quantity;
+
+    // Salvar o usuário atualizado
+    await user.save();
+
+    // Atualizar histórico e vendas
+    await User.findByIdAndUpdate(
+      uid,
+      {
+        $push: {
+          history: {
+            $each: [
+              {
+                name,
+                quantity,
+                total_quantity: quantity - remove_quantity,
+                updateon: uploadOn,
+                type: "sale",
+              },
+            ],
+            $position: 0,
+          },
+          sales: {
+            $each: [
+              {
+                name,
+                quantity,
+                remaining_quantity: quantity - remove_quantity,
+                sales_amount: quantity * price,
+                date,
+              },
+            ],
+            $position: 0,
+          },
+        },
+        $set: {
+          totalSale: user.totalSale + salesAmount,
+        },
+      },
+      { new: true }
+    );
+
+    // Enviar resposta de sucesso
+    res.status(200).json({ msg: "Medicamento removido com sucesso..." });
+  } catch (error) {
+    console.error("Error today: ", error);
+    res.status(500).json({ msg: "Erro interno do servidor" });
+  }
 }

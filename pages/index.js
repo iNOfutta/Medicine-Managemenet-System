@@ -1,66 +1,122 @@
-import classes from '../styles/home.module.css';
-import Image from 'next/image';
-import easyToManage from '../Images/easyToManage.webp';
-import userFriendly from '../Images/userFriendly.webp';
-import alwaysImproving from '../Images/alwaysImproving.webp';
-import Head from 'next/head';
+import { Box, Button, Typography, Container, Grid, Paper } from "@mui/material";
+import Image from "next/image";
+import easyToManage from "../Images/easyToManage.webp";
+import userFriendly from "../Images/userFriendly.webp";
+import alwaysImproving from "../Images/alwaysImproving.webp";
+import Head from "next/head";
+import { useState } from "react";
 
 export default function Home() {
+  const [showMore, setShowMore] = useState(false);
+
   return (
     <>
       <Head>
-        <meta name="description" content="Easy to manage Stock" />
-        <meta name="description" content="stock management system" />
-        <meta name="description" content="user friendly stock management system" />
-        <title>MedAssist.io</title>
+        <title>SHRL - Gerenciamento Simplificado</title>
+        <meta
+          name="description"
+          content="Plataforma intuitiva para o gerenciamento eficiente do seu estoque."
+        />
       </Head>
-      <div className={classes.main_container}>
-        <div className={classes.sub_conatiner}>
-          <div className={classes.content}>
-            <h1>Easy to Manage Stock!</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda, magni. Sed non hic deleniti, illo temporibus minima molestias facilis enim placeat. Dolor ducimus similique totam laudantium magnam eveniet quod atque pariatur. Eaque, consequuntur eligendi!</p>
-          </div>
-          <div className={classes.img}>
-            <Image
-              src={easyToManage}
-              width={300}
-              height={300}
-              alt="Management"
-              priority="performance"
-            />
-          </div>
-        </div>
-        <div className={classes.sub_conatiner_rev}>
-          <div className={classes.content}>
-            <h1>User Friendly Interface!</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda, magni. Sed non hic deleniti, illo temporibus minima molestias facilis enim placeat. Dolor ducimus similique totam laudantium magnam eveniet quod atque pariatur. Eaque, consequuntur eligendi!</p>
-          </div>
-          <div className={classes.img}>
-            <Image
-              src={userFriendly}
-              width={300}
-              height={300}
-              alt="Management"
-              priority="performance"
-            />
-          </div>
-        </div>
-        <div className={classes.sub_conatiner}>
-          <div className={classes.content}>
-            <h1> always updating!</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda, magni. Sed non hic deleniti, illo temporibus minima molestias facilis enim placeat. Dolor ducimus similique totam laudantium magnam eveniet quod atque pariatur. Eaque, consequuntur eligendi!</p>
-          </div>
-          <div className={classes.img}>
-            <Image
-              src={alwaysImproving}
-              width={300}
-              height={300}
-              alt="Management"
-              priority="performance"
-            />
-          </div>
-        </div>
-      </div>
+      <Box sx={{ bgcolor: "background.paper", py: 10 }}>
+        <Container maxWidth="lg">
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            textAlign="center"
+          >
+            Bem-vindo ao Sistema de Gestão do HRL
+          </Typography>
+          <Typography variant="h6" component="p" paragraph textAlign="center">
+            Gerencie seu estoque com facilidade e eficiência.
+          </Typography>
+          <Box textAlign="center" my={4}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={() => setShowMore(!showMore)}
+              sx={{ padding: "10px 20px", fontSize: "16px" }}
+            >
+              Saber mais
+            </Button>
+          </Box>
+          <Grid container spacing={4} justifyContent="center">
+            <Grid item xs={12} sm={4}>
+              <Paper elevation={3} sx={{ padding: 2, textAlign: "center" }}>
+                <Image
+                  src={easyToManage}
+                  alt="Gestão Eficiente"
+                  width={500}
+                  height={400}
+                  style={{ width: "100%", height: "auto", borderRadius: "8px" }}
+                />
+                <Typography variant="h6" component="p" mt={2}>
+                  Gestão Eficiente
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Paper elevation={3} sx={{ padding: 2, textAlign: "center" }}>
+                <Image
+                  src={userFriendly}
+                  alt="Usabilidade Amigável"
+                  width={500}
+                  height={400}
+                  style={{ width: "100%", height: "auto", borderRadius: "8px" }}
+                />
+                <Typography variant="h6" component="p" mt={2}>
+                  Usabilidade Amigável
+                </Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Paper elevation={3} sx={{ padding: 2, textAlign: "center" }}>
+                <Image
+                  src={alwaysImproving}
+                  alt="Inovação Contínua"
+                  width={500}
+                  height={400}
+                  style={{ width: "100%", height: "auto", borderRadius: "8px" }}
+                />
+                <Typography variant="h6" component="p" mt={2}>
+                  Inovação Contínua
+                </Typography>
+              </Paper>
+            </Grid>
+          </Grid>
+          {showMore && (
+            <Box mt={6}>
+              <Typography
+                variant="h5"
+                component="h2"
+                gutterBottom
+                textAlign="center"
+              >
+                Por que escolher o MedAssist?
+              </Typography>
+              <Box
+                component="ul"
+                sx={{ textAlign: "left", maxWidth: "800px", margin: "0 auto" }}
+              >
+                <Typography component="li" paragraph>
+                  <strong>Gestão Intuitiva:</strong> Interface fácil de usar
+                  para todos os usuários.
+                </Typography>
+                <Typography component="li" paragraph>
+                  <strong>Segurança:</strong> Proteção dos dados sensíveis com
+                  criptografia avançada.
+                </Typography>
+                <Typography component="li" paragraph>
+                  <strong>Personalização:</strong> Configurações adaptáveis às
+                  necessidades específicas do seu negócio.
+                </Typography>
+              </Box>
+            </Box>
+          )}
+        </Container>
+      </Box>
     </>
-  )
+  );
 }

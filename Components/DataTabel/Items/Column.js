@@ -1,26 +1,52 @@
 export const columns = [
-    { field: '_id', headerName: 'ID', width: 220 },
-    { field: 'name', headerName: 'Name', width: 190 },
-    {
-        field: 'quantity',
-        headerName: 'Quantity',
-        type: 'number',
-        width: 160,
-    },
-    {
-        field: 'price',
-        headerName: 'Price',
-        type: 'number',
-        width: 160,
-    },
-    {
-        field: 'expiryDate',
-        headerName: 'ExpiryDate',
-        width: 190
-    },
-    {
-        field: 'uploadOn',
-        headerName: 'Upload-On',
-        width: 160
-    }
+  {
+    field: "_id",
+    headerName: "ID",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "name",
+    headerName: "Nome",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "quantity",
+    headerName: "Quantidade",
+    type: "number",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
+  },
+  /* {
+    field: "price",
+    headerName: "Preço",
+    type: "number",
+    width: 160,
+  }, */
+  {
+    field: "expiryDate",
+    headerName: "Data de validade",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    id: "userName",
+    field: "userName",
+    headerName: "Usuário(a)",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "uploadOn",
+    headerName: "Data de Registo",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
+  },
 ];

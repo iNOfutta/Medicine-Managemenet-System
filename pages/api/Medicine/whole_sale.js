@@ -1,68 +1,70 @@
 /**
- * 
- * @param {import('next').NextApiRequest} req 
- * @param {import('next').NextApiResponse} res 
+ *
+ * @param {import('next').NextApiRequest} req
+ * @param {import('next').NextApiResponse} res
  */
 
-// import Medicine from '../../../Models/medicine';
-import User from '../../../Models/user';
-import connectMongo from '../../../utils/connectMongo';
+import User from "../../../Models/user";
+import connectMongo from "../../../utils/connectMongo";
 
 export default async function add(req, res) {
+  try {
+    // Conectar ao banco de dados
+    await connectMongo();
 
-    try {
-        // try to connect database
-        await connectMongo();
+    // Obter dados do corpo da requisição
+    const { uid, _id, quantity, name, type, uploadOn, price, date } = req.body;
 
-        // fetch data
-        const { uid, _id, quantity, name, type, uploadOn, price, date } = req.body;
-        // console.log(req.body);
+    const currentAmount = quantity * price;
 
-        const currentAmount = quantity * price;
-        // find appropiate user for the addition
-        User.findOneAndUpdate(
-            { uid },
-            {
-                $pull: {
-                    stock: { _id }
-                },
-                $inc: {
-                    totalSale: currentAmount
-                },
-                $push: {
-                    history: {
-                        $each: [{
-                            name,
-                            quantity: quantity,
-                            total_quantity: (quantity - quantity),
-                            updateon: uploadOn,
-                            type
-                        }], $position: 0
-                    },
-                    sales: {
-                        $each: [{
-                            name,
-                            quantity,
-                            remaining_quantity: 0,
-                            sales_ammount: (quantity * price),
-                            date
-                        }], $position: 0
-                    }
-                },
-            },
-            { new: true },
-            function removeConnectionsCB(err, obj) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    res.send({ msg: 'Medicie Successfully Sell...' })
-                }
-            }
-        );
+    // Atualizar o usuário
+    const user = await User.findOneAndUpdate(
+      { _id: uid },
+      {
+        $pull: {
+          stock: { _id },
+        },
+        $inc: {
+          totalSale: currentAmount,
+        },
+        $push: {
+          history: {
+            $each: [
+              {
+                name,
+                quantity,
+                total_quantity: 0,
+                updateon: uploadOn,
+                type: "sale",
+              },
+            ],
+            $position: 0,
+          },
+          sales: {
+            $each: [
+              {
+                name,
+                quantity,
+                remaining_quantity: 0,
+                sales_amount: currentAmount,
+                date,
+              },
+            ],
+            $position: 0,
+          },
+        },
+      },
+      { new: true }
+    );
 
-        // res.send({ msg: 'Medicie Successfully Removed...' })
-    } catch (error) {
-        // console.log(error);
-        res.send({ msg: error });
+    if (!user) {
+      return res.status(404).json({ msg: "Usuário não encontrado" });
     }
+
+    // Enviar resposta de sucesso
+    res.status(200).json({ msg: "Medicamento removido com sucesso..." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Erro interno do servidor" });
+  }
 }

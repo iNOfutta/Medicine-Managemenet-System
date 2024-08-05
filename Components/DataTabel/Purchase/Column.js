@@ -1,18 +1,35 @@
 export const columns = [
-    { id: 'name', field: 'name', headerName: 'Name', width: 350 },
-    {
-        id: 'total_quantity',
-        field: 'total_quantity',
-        headerName: 'Available Quantity',
-        type: 'number',
-        width: 350,
-        align: "center",
-    },
-    {
-        id: 'updateon',
-        field: 'updateon',
-        headerName: 'Purchase On',
-        width: 350,
-        align: "center"
-    },
+  {
+    id: "name",
+    field: "name",
+    headerName: "Nome",
+    width: 310,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    id: "total_quantity",
+    field: "total_quantity",
+    headerName: "Quantidade Disponível",
+    type: "number",
+    width: 310,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    id: "userName",
+    field: "userName",
+    headerName: "Usuário(a)",
+    width: 310,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    id: "updateon",
+    field: "updateon",
+    headerName: "Data de Registo",
+    width: 310,
+    align: "center",
+    headerAlign: "center",
+  },
 ];

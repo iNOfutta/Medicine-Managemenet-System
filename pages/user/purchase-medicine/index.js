@@ -1,159 +1,207 @@
 import Navbar from "../../../Components/subNavbar/navbar";
-import classes from "./add_item.module.css";
-import { Button, TextField } from '@mui/material'
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { Button, TextField } from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import NavigationBar from "../../../Components/SideLayout/Navigation/NavigationBar";
 import { useContext, useState } from "react";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { auth } from "../../../firebase/firebase";
-import convertDate from "../../../utils/convertDate";
-import getCurrentDate from "../../../utils/getCurrentDate";
-import { StateContext } from "../../../Context/StateContext";
-import AlertDialog from '../../../Components/AlertDialog/AlertDialog'
+import { useAuth } from "../../../firebase/Context/AuthContext";
+import AlertDialog from "../../../Components/AlertDialog/AlertDialog";
 import Head from "next/head";
+import { StateContext } from "../../../Context/StateContext";
 
 const AddItem = () => {
+  // context
+  const { state, dispatch } = useContext(StateContext);
+  const { currentUser } = useAuth();
 
-    // context
-    const { state, dispatch } = useContext(StateContext)
+  // state
+  const [value, setValue] = useState(new Date());
+  const [data, setData] = useState({
+    name: "",
+    quantity: "",
+    price: 0,
+  });
 
-    // state
-    const [value, setValue] = useState(dayjs(convertDate(getCurrentDate())));
-    const [data, setData] = useState({
-        name: '',
-        quantity: '',
-        price: ''
-    })
+  // router
+  const router = useRouter();
 
-    // router
-    const router = useRouter();
+  // change state of date to user selected date
+  const handleChange = (newValue) => {
+    setValue(newValue);
+  };
 
-    // change state of date to user selected date
-    const handleChange = (newValue) => {
-        setValue(newValue);
-    };
+  // update state values
+  const changeHandle = (e) => {
+    const element = e.target.getAttribute("id");
+    setData((current) => ({ ...current, [element]: e.target.value }));
+  };
 
-    // update state values
-    const changeHandle = (e) => {
-        const element = e.target.getAttribute('id');
-        setData((current) => ({ ...current, [element]: e.target.value }))
+  // close the alert
+  const closeAlert = () => {
+    dispatch({ type: "close alert" });
+    router.replace("/user/items");
+  };
+
+  // handle submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let currentDate = new Date();
+    const expiryDate = value;
+
+    if (expiryDate > currentDate) {
+      axios
+        .post("/api/Medicine/add", {
+          uid: currentUser._id,
+          ...data,
+          expiryDate: value,
+          uploadOn: currentDate,
+        })
+        .then((res) => {
+          dispatch({
+            type: "open popup",
+            payload: {
+              msg: res?.data?.msg,
+              type: "success",
+            },
+          });
+          router.replace("/user/purchase");
+        })
+        .catch((err) => {
+          dispatch({
+            type: "open popup",
+            payload: {
+              msg: err,
+              type: "error",
+            },
+          });
+        });
+    } else {
+      dispatch({
+        type: "open alert",
+        payload: {
+          title: "Alerta de vencimento...",
+          msg: "Oppps! O medicamento já expirou... você não pode adicionar em estoque",
+        },
+      });
     }
+  };
 
-    // close the alert
-    const closeAlert = () => {
-        dispatch({ type: 'close alert' })
-        router.replace('/user/items');
-    }
-
-    // handle submit 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        let currentDate = new Date();
-        const ex_date = `${value.year()}-${value.month() > 9 ? value.month() : `0${value.month()}`}-${value.date() > 9 ? value.date() : `0${value.date()}`} `;
-        const cu_date = `${currentDate.getFullYear()}-${currentDate.getMonth() > 9 ? currentDate.getMonth() : `0${currentDate.getMonth()}`}-${currentDate.getDate() > 9 ? currentDate.getDate() : `0${currentDate.getDate()}`} `;
-        const expiryDate = new Date(ex_date);
-
-
-        // if medicine is not expiyred this part of code is run
-        if (expiryDate > currentDate) {
-            axios.post(process.env.DB + '/Medicine/add', { uid: auth.currentUser.uid, ...data, expiryDate: ex_date, uploadOn: cu_date })
-                .then((res) => {
-                    // open pop up with specific message
-                    dispatch({
-                        type: 'open popup', playload: {
-                            msg: res.data.msg,
-                            type: 'success'
-                        }
-                    })
-
-                    // route to items page when medicine was added
-                    router.replace('/user/purchase')
-                })
-                .catch(err => {
-                    dispatch({
-                        type: 'open popup', playload: {
-                            msg: err,
-                            type: 'error'
-                        }
-                    })
-                })
-        }
-        // if medicine is already expiyred this part of code is run
-        else {
-            dispatch({
-                type: 'open alert', playload: {
-                    title: "Expiry Alert...",
-                    msg: "Oppps ! Medicine is already expiyred ... you are not able to add this in stock"
-                }
-            });
-        }
-    }
-
-
-    if (state.isAlertOpen) {
-        return <AlertDialog info={state.alertMsg} open={state.isAlertOpen} title={state.alertTitle} handleClose={closeAlert} />
-    }
-
+  if (state.isAlertOpen) {
     return (
-        <>
-            <Head>
-                <title>MedAssist | Purchase Medicine</title>
-            </Head>
-            <Navbar title="Purchase Medicine" />
-            <NavigationBar />
-            <div className={classes.add_container}>
-                <div className={classes.container}>
-                    <TextField
-                        className={classes.input}
-                        id="name"
-                        label="Item Name"
-                        variant="outlined"
-                        value={data.name}
-                        onChange={changeHandle}
-                    />
-                    <TextField
-                        className={classes.input}
-                        id="quantity"
-                        label="Quantity"
-                        type="number"
-                        variant="outlined"
-                        value={data.quantity}
-                        onChange={changeHandle}
-                    />
-                    <TextField
-                        className={classes.input}
-                        id="price"
-                        type="number"
-                        label="Price (per/piece)"
-                        variant="outlined"
-                        value={data.price}
-                        onChange={changeHandle}
-                    />
-                    <div className={classes.cal}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DesktopDatePicker
-                                label="Expiry Date"
-                                inputFormat="MM/DD/YYYY"
-                                value={value}
-                                onChange={handleChange}
-                                renderInput={(params) => <TextField className={classes.input} {...params} />}
-                                views={["day", "month", "year"]}
-                            />
-                        </LocalizationProvider>
-                    </div>
-                    <div className={classes.btn}>
-                        <Button variant="contained" type="submit" onClick={handleSubmit}>
-                            PURCHASE
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </>
-    )
-}
+      <AlertDialog
+        info={state.alertMsg}
+        open={state.isAlertOpen}
+        title={state.alertTitle}
+        handleClose={closeAlert}
+      />
+    );
+  }
+
+  return (
+    <>
+      <Head>
+        <title>HRL | Abastecimento de Medicamento</title>
+      </Head>
+      <Navbar title="Abastecimento de Medicamento" />
+      <NavigationBar />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "20px",
+          backgroundColor: "#f5f5f5",
+          minHeight: "100vh",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "600px",
+            width: "100%",
+            backgroundColor: "#ffffff",
+            borderRadius: "8px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <TextField
+            sx={{
+              width: "100%",
+              marginBottom: "20px",
+              backgroundColor: "#fafafa",
+            }}
+            id="name"
+            label="Nome"
+            variant="outlined"
+            value={data.name}
+            onChange={changeHandle}
+          />
+          <TextField
+            sx={{
+              width: "100%",
+              marginBottom: "20px",
+              backgroundColor: "#fafafa",
+            }}
+            id="quantity"
+            label="Quantidade"
+            type="number"
+            variant="outlined"
+            value={data.quantity}
+            onChange={changeHandle}
+          />
+          <div style={{ marginBottom: "20px" }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
+                label="Data de Expiração"
+                inputFormat="DD/MM/YYYY"
+                value={value}
+                onChange={handleChange}
+                renderInput={(params) => (
+                  <TextField
+                    sx={{
+                      width: "100%",
+                      backgroundColor: "#fafafa",
+                    }}
+                    {...params}
+                  />
+                )}
+                views={["day", "month", "year"]}
+              />
+            </LocalizationProvider>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              type="submit"
+              onClick={handleSubmit}
+              sx={{
+                backgroundColor: "#4caf50",
+                color: "#ffffff",
+                padding: "10px 20px",
+                borderRadius: "5px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                transition: "background-color 0.3s, box-shadow 0.3s",
+                "&:hover": {
+                  backgroundColor: "#45a049",
+                },
+                "&:active": {
+                  backgroundColor: "#388e3c",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                },
+              }}
+            >
+              ADICIONAR
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default AddItem;
