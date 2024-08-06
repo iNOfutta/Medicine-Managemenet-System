@@ -65,9 +65,8 @@ export default function Login() {
   };
 
   const images = [
-    "https://atlantablackstar.com/wp-content/uploads/2015/03/drmcgriff-e5c2ebfdb0dca594f12cde613c93e4280d1e6e1b.jpg",
-    "https://img.huffingtonpost.com/asset/5cd6505f2500003300a582ab.jpeg?ops=1778_1000",
-    "https://img.einnews.com/large/428969/black-woman-doctor.png",
+    /* "https://img.huffingtonpost.com/asset/5cd6505f2500003300a582ab.jpeg?ops=1778_1000",
+    "https://img.einnews.com/large/428969/black-woman-doctor.png", */
     "https://images.ctfassets.net/rzyyi40064na/36WPua2O0JBFI5edpkL2vx/53a06fea02c370e470e447be2667a4eb/iStock-877029554.jpg",
   ];
   const random = Math.floor(Math.random() * images.length);
@@ -89,7 +88,7 @@ export default function Login() {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              bgcolor: "#0D1427",
+              bgcolor: "#fff",
               p: 4,
             }}
           >
@@ -121,7 +120,7 @@ export default function Login() {
                   sx={{ bgcolor: "white" }}
                 />
                 <TextField
-                  label="Password"
+                  label="Senha"
                   type="password"
                   fullWidth
                   inputRef={passRef}
@@ -143,10 +142,10 @@ export default function Login() {
                   sx={{ mt: 3, padding: "10px" }}
                   disabled={loading}
                 >
-                  {loading ? "Carregando..." : "Login"}
+                  {loading ? "Carregando..." : "Entrar"}
                 </Button>
                 <Typography color="white" sx={{ mt: 2, textAlign: "center" }}>
-                  Forgot Your Password?
+                  Esqueceu sua senha?
                 </Typography>
                 <Box
                   sx={{
@@ -167,43 +166,31 @@ export default function Login() {
                     variant="outlined"
                     sx={{ color: "white", borderColor: "white" }}
                   >
-                    Doctor
+                    Médico(a)
                   </Button>
                   <Button
                     variant="outlined"
                     sx={{ color: "white", borderColor: "white" }}
                   >
-                    Patient
+                    Paciente
                   </Button>
                   <Button
                     variant="outlined"
                     sx={{ color: "white", borderColor: "white" }}
                   >
-                    Nurse
+                    Enfermeiro(a)
                   </Button>
                   <Button
                     variant="outlined"
                     sx={{ color: "white", borderColor: "white" }}
                   >
-                    Receptionist
+                    Recepcionista
                   </Button>
                   <Button
                     variant="outlined"
                     sx={{ color: "white", borderColor: "white" }}
                   >
-                    Laboratorist
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    sx={{ color: "white", borderColor: "white" }}
-                  >
-                    Pharmacist
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    sx={{ color: "white", borderColor: "white" }}
-                  >
-                    Accountant
+                    Farmaceuta
                   </Button>
                 </Box>
               </form>
