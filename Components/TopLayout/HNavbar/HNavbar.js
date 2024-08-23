@@ -33,7 +33,7 @@ export default function HNavbar() {
               height={80}
               alt="HRL Logo"
               priority="high"
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", margin: 15 }}
             />
           </Box>
         </Link>

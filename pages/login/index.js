@@ -64,11 +64,7 @@ export default function Login() {
       });
   };
 
-  const images = [
-    /* "https://img.huffingtonpost.com/asset/5cd6505f2500003300a582ab.jpeg?ops=1778_1000",
-    "https://img.einnews.com/large/428969/black-woman-doctor.png", */
-    "https://images.ctfassets.net/rzyyi40064na/36WPua2O0JBFI5edpkL2vx/53a06fea02c370e470e447be2667a4eb/iStock-877029554.jpg",
-  ];
+  const images = ["/iStock-877029554.png"];
   const random = Math.floor(Math.random() * images.length);
   const randomImage = images[random];
   console.log("Random: ", random);

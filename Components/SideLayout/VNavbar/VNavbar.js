@@ -140,12 +140,12 @@ export default function Navbar() {
         .main {
           display: flex;
           height: 100vh;
-          background-color: #f4f4f9;
+          background-color: #fff;
           width: auto;
         }
         .sidebar {
           width: 250px;
-          background-color: #1e2a38;
+          background-color: #e65d29;
           padding: 20px;
           display: flex;
           flex-direction: column;
@@ -191,7 +191,7 @@ export default function Navbar() {
           position: absolute;
           top: -5px;
           right: -10px;
-          background-color: #e74c3c;
+          background-color: #2d347a;
           color: white;
           border-radius: 50%;
           padding: 2px 6px;

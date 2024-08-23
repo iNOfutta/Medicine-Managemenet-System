@@ -46,7 +46,10 @@ export default function Home() {
             <Grid item xs={12} sm={4}>
               <Paper elevation={3} sx={{ padding: 2, textAlign: "center" }}>
                 <Image
-                  src={easyToManage}
+                  //src={easyToManage}
+                  src={
+                    "https://centerforuspolicy.org/wp-content/uploads/2019/03/AdobeStock_207692827EDIT.jpg"
+                  }
                   alt="Gestão Eficiente"
                   width={500}
                   height={400}
@@ -60,7 +63,10 @@ export default function Home() {
             <Grid item xs={12} sm={4}>
               <Paper elevation={3} sx={{ padding: 2, textAlign: "center" }}>
                 <Image
-                  src={userFriendly}
+                  //src={userFriendly}
+                  src={
+                    "https://www.pcbennett.com/wp-content/uploads/2023/06/ERP-Header.png"
+                  }
                   alt="Usabilidade Amigável"
                   width={500}
                   height={400}
@@ -74,7 +80,10 @@ export default function Home() {
             <Grid item xs={12} sm={4}>
               <Paper elevation={3} sx={{ padding: 2, textAlign: "center" }}>
                 <Image
-                  src={alwaysImproving}
+                  //src={alwaysImproving}
+                  src={
+                    "https://www.cancer.gov/sites/g/files/xnrzdm211/files/styles/cgov_social_media/public/cgov_image/media_image/2021-01/Global-Research-iStock-1154231467.jpg"
+                  }
                   alt="Inovação Contínua"
                   width={500}
                   height={400}
