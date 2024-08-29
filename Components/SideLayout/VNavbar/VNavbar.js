@@ -35,7 +35,7 @@ export default function Navbar() {
       <nav className="sidebar">
         <div className="logo-container">
           <Image
-            src={"/HRL-LOGO-OFICIAL.png"}
+            src={"/LOGO_BRANCO2.png"}
             width={200}
             height={50}
             alt="logo HRL"
@@ -140,12 +140,12 @@ export default function Navbar() {
         .main {
           display: flex;
           height: 100vh;
-          background-color: #fff;
+          background-color: #f4f4f9;
           width: auto;
         }
         .sidebar {
           width: 250px;
-          background-color: #e65d29;
+          background-color: #1e2a38;
           padding: 20px;
           display: flex;
           flex-direction: column;
@@ -191,7 +191,7 @@ export default function Navbar() {
           position: absolute;
           top: -5px;
           right: -10px;
-          background-color: #2d347a;
+          background-color: #e65d29;
           color: white;
           border-radius: 50%;
           padding: 2px 6px;
